@@ -13,6 +13,7 @@ app.use(userRoutes);
 mongoose.connect("mongodb://localhost/e-commerce", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useCreateIndex: true,
 });
 
 app.all("*", (req, res) => {

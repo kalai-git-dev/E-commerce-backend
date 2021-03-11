@@ -42,8 +42,33 @@ router.post("/user/signup", async (req, res) => {
   }
 });
 
-router.post("/user/login", (req, res) => {
-  res.json([1, 2, 4, 5]);
+router.post("/user/login", async (req, res) => {
+  const { email, password } = req.fields;
+
+  try {
+    const user = await User.findOne({ email: email });
+    console.log(user);
+
+    if (!user) {
+      return res.status(401).json({ message: "email n'existe pas" });
+    } else {
+      const hashToVerify = SHA256(password + user.salt).toString(encBase64);
+      if (user.hash === hashToVerify) {
+        return res
+          .status(200)
+          .json({
+            _id: user._id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            token: user.token,
+          });
+      }
+    }
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+  res.json();
 });
 
 module.exports = router;

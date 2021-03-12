@@ -13,7 +13,7 @@ router.post("/user/signup", async (req, res) => {
     const user = await User.findOne({ email: email });
 
     if (user) {
-      res.status(404).json({ message: "email already exist" });
+      res.status(409).json({ message: "Email déja utilisé" });
     } else {
       if (password && email && firstName && lastName) {
         const token = uid2(64);
@@ -35,6 +35,8 @@ router.post("/user/signup", async (req, res) => {
           token: newUser.token,
           email: newUser.email,
         });
+      } else {
+        return res.status(400).json({ message: "missing parameters" });
       }
     }
   } catch (error) {
@@ -46,24 +48,28 @@ router.post("/user/login", async (req, res) => {
   const { email, password } = req.fields;
 
   try {
-    const user = await User.findOne({ email: email });
-    console.log(user);
+    if (email && password) {
+      const user = await User.findOne({ email: email });
+      // console.log(user);
 
-    if (!user) {
-      return res.status(401).json({ message: "email n'existe pas" });
-    } else {
-      const hashToVerify = SHA256(password + user.salt).toString(encBase64);
-      if (user.hash === hashToVerify) {
-        return res
-          .status(200)
-          .json({
+      if (user) {
+        const hashToVerify = SHA256(password + user.salt).toString(encBase64);
+        if (user.hash === hashToVerify) {
+          return res.status(200).json({
             _id: user._id,
             email: user.email,
             firstName: user.firstName,
             lastName: user.lastName,
             token: user.token,
           });
+        } else {
+          return res.status(401).json({ message: "unautorized" });
+        }
+      } else {
+        return res.status(400).json({ message: "user not found" });
       }
+    } else {
+      return res.status(400).json({ message: "misssing parameters" });
     }
   } catch (error) {
     res.status(404).json({ message: error.message });

@@ -8,7 +8,9 @@ app.use(formidable());
 app.use(cors());
 
 const userRoutes = require("./Routes/user");
+const offerRoutes = require("./Routes/offer");
 app.use(userRoutes);
+app.use(offerRoutes);
 
 mongoose.connect("mongodb://localhost/e-commerce", {
   useNewUrlParser: true,

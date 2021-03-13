@@ -1,5 +1,12 @@
 const express = require("express");
 const router = express.Router();
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: "kalai1414",
+  api_key: "686439186756211",
+  api_secret: "0b4BTRXOtNwQrXYtdjsQTYUAFks",
+});
 
 const isAuthenticated = require("../MiIddelwares/isAuthenticated");
 
@@ -19,7 +26,7 @@ router.post("/publish", isAuthenticated, async (req, res) => {
     color,
   } = req.fields;
   //   console.log(req.user);
-  console.log(req.fields.path);
+  console.log(req.files.picture.path);
 
   const newOffer = new Offer({
     title,
@@ -36,7 +43,10 @@ router.post("/publish", isAuthenticated, async (req, res) => {
     ],
     owner: req.user,
   });
-
+  const result = await cloudinary.uploader.upload(req.files.picture.path, {
+    folder: "/ecomerce/offers",
+  });
+  newOffer.image = result;
   await newOffer.save();
 
   res.json(newOffer);

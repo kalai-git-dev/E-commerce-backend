@@ -36,7 +36,7 @@ router.post("/user/signup", async (req, res) => {
           email: newUser.email,
         });
       } else {
-        return res.status(400).json({ message: "missing parameters" });
+        return res.status(400).json({ message: "parametre(s) manquant(s)" });
       }
     }
   } catch (error) {
@@ -63,18 +63,18 @@ router.post("/user/login", async (req, res) => {
             token: user.token,
           });
         } else {
-          return res.status(401).json({ message: "unautorized" });
+          return res.status(401).json({ message: "accés non autoriser" });
         }
       } else {
         return res.status(400).json({ message: "user not found" });
       }
     } else {
-      return res.status(400).json({ message: "misssing parameters" });
+      return res.status(400).json({ message: "parametre(s) manquant(s)" });
     }
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
-  res.json();
+ 
 });
 
 module.exports = router;

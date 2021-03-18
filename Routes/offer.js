@@ -35,8 +35,8 @@ router.post("/publish", isAuthenticated, async (req, res) => {
       category,
       city,
       price,
+      sexe,
       details: [
-        { SEXE: sexe },
         { MARQUE: marque },
         { TAILLE: size },
         { ETAT: condition },
@@ -56,4 +56,8 @@ router.post("/publish", isAuthenticated, async (req, res) => {
   }
 });
 
+router.get("/offers", async (req, res) => {
+  const offers = await Offer.findOne({ sexe: "homme" });
+  return res.status(200).json({ offers });
+});
 module.exports = router;

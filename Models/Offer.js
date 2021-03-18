@@ -21,6 +21,9 @@ const Offer = mongoose.model("Offer", {
     type: Number,
     required: true,
   },
+  sexe: {
+    type: String,
+  },
   details: Array,
 
   image: { type: mongoose.Schema.Types.Mixed, default: {} },

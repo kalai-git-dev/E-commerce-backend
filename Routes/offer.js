@@ -57,7 +57,8 @@ router.post("/publish", isAuthenticated, async (req, res) => {
 });
 
 router.get("/offers", async (req, res) => {
-  const offers = await Offer.findOne({ sexe: "homme" });
+  const filters={}
+  const offers = await Offer.find(filters).sort();
   return res.status(200).json({ offers });
 });
 module.exports = router;

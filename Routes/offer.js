@@ -102,3 +102,16 @@ router.get("/offers", async (req, res) => {
   return res.status(200).json({ offers });
 });
 module.exports = router;
+
+router.get("/offer/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const offer = await Offer.findById(id).populate({
+      path: "owner",
+      select: "-hash -salt",
+    });
+    res.status(200).json(offer);
+  } catch (error) {
+    res.status(400).json({ message: "eroor" });
+  }
+});

@@ -57,7 +57,37 @@ router.post("/publish", isAuthenticated, async (req, res) => {
 });
 
 router.get("/offers", async (req, res) => {
-  const offers = await Offer.findOne({ sexe: "homme" });
+  let filters = {};
+  if (req.query.title) {
+    filters.title = new RegExp(req.query.title, "i");
+  }
+  if (req.query.category) {
+    filters.category = req.query.category;
+  }
+  if (req.query.city) {
+    filters.city = new RegExp(req.query.city, "i");
+  }
+  if (req.query.priceMin) {
+    filters.price = { $gte: req.query.priceMin };
+  }
+  if (req.query.priceMax) {
+    if (filters.price) {
+      filters.price.$lte = req.query.priceMax;
+    } else {
+      filters.price = { $gte: req.query.priceMax };
+    }
+  }
+
+  // sort
+  let sort = {};
+  if (req.query.sort === "asc") {
+    sort = { price: 1 };
+  } else if (req.query.sort === "desc") {
+    sort = { price: -1 };
+  }
+  const offers = await Offer.find(filters)
+    .sort(sort)
+    .select("_id title sexe description category city price details");
   return res.status(200).json({ offers });
 });
 module.exports = router;

@@ -85,9 +85,20 @@ router.get("/offers", async (req, res) => {
   } else if (req.query.sort === "desc") {
     sort = { price: -1 };
   }
+  //pagination
+  let page;
+  if (Number(req.query.page) < 1) {
+    page = 1;
+  } else {
+    page = Number(req.query.page);
+  }
+
+  let limit = Number(req.query.limit);
   const offers = await Offer.find(filters)
     .sort(sort)
-    .select("_id title sexe description category city price details");
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .select("_id title sexe description category city price ");
   return res.status(200).json({ offers });
 });
 module.exports = router;

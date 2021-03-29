@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const formidable = require("express-formidable");
 const mongoose = require("mongoose");
@@ -12,7 +13,15 @@ const offerRoutes = require("./Routes/offer");
 app.use(userRoutes);
 app.use(offerRoutes);
 
-mongoose.connect("mongodb://localhost/e-commerce", {
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: "kalai1414",
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,
@@ -22,6 +31,6 @@ app.all("*", (req, res) => {
   res.status(404).json({ message: "cette route n'existe pas" });
 });
 
-app.listen(3000, () => {
+app.listen(process.env.PORT, () => {
   console.log("server started");
 });

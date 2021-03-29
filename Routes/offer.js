@@ -1,12 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const cloudinary = require("cloudinary").v2;
-
-cloudinary.config({
-  cloud_name: "kalai1414",
-  api_key: "686439186756211",
-  api_secret: "0b4BTRXOtNwQrXYtdjsQTYUAFks",
-});
 
 const isAuthenticated = require("../MiIddelwares/isAuthenticated");
 

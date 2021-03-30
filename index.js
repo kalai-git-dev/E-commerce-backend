@@ -17,11 +17,11 @@ const cloudinary = require("cloudinary").v2;
 
 cloudinary.config({
   cloud_name: "kalai1414",
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+  api_key: "686439186756211",
+  api_secret: "0b4BTRXOtNwQrXYtdjsQTYUAFks",
 });
 
-mongoose.connect(process.env.MONGODB_URI, {
+mongoose.connect("mongodb://localhost/e-commerce", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true,

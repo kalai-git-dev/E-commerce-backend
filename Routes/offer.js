@@ -94,7 +94,6 @@ router.get("/offers", async (req, res) => {
     .select("_id title sexe description category city price ");
   return res.status(200).json({ offers });
 });
-module.exports = router;
 
 router.get("/offer/:id", async (req, res) => {
   try {
@@ -108,3 +107,4 @@ router.get("/offer/:id", async (req, res) => {
     res.status(400).json({ message: "eroor" });
   }
 });
+module.exports = router;

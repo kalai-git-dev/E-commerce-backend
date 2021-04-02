@@ -1,11 +1,17 @@
 const express = require("express");
 const router = express.Router();
+const cloudinary = require("cloudinary").v2;
+cloudinary.config({
+  cloud_name: "kalai1414",
+  api_key: "686439186756211",
+  api_secret: "0b4BTRXOtNwQrXYtdjsQTYUAFks",
+});
 
 const isAuthenticated = require("../MiIddelwares/isAuthenticated");
 
 const Offer = require("../Models/Offer");
 
-router.post("/publish", isAuthenticated, async (req, res) => {
+router.post("/offer/publish", isAuthenticated, async (req, res) => {
   try {
     const {
       title,
@@ -38,14 +44,14 @@ router.post("/publish", isAuthenticated, async (req, res) => {
       owner: req.user,
     });
     const result = await cloudinary.uploader.upload(req.files.picture.path, {
-      folder: "/ecomerce/offers",
+      folder: "/ecomerce/offer",
     });
     newOffer.image = result;
     await newOffer.save();
 
     res.json(newOffer);
   } catch (error) {
-    res.status(400).json({ message: "eroor" });
+    res.status(400).json({ message: error.message });
   }
 });
 
@@ -90,8 +96,8 @@ router.get("/offers", async (req, res) => {
   const offers = await Offer.find(filters)
     .sort(sort)
     .skip((page - 1) * limit)
-    .limit(limit)
-    .select("_id title sexe description category city price ");
+    .limit(limit);
+
   return res.status(200).json({ offers });
 });
 
